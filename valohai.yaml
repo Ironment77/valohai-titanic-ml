@@ -1,59 +1,25 @@
-- step:
-    name: preprocess
-    image: docker.io/yourdocker/titanic-ml
+steps:
+  preprocess:
+    image: python:3.9
     command:
+      - pip install -r requirements.txt
       - python src/preprocess.py
-    outputs:
-      - name: processed.csv
 
-- step:
-    name: train
-    image: docker.io/yourdocker/titanic-ml
+  train:
+    image: python:3.9
     command:
+      - pip install -r requirements.txt
       - python src/train.py
-    inputs:
-      - name: processed-data
-        filename: processed.csv
-    outputs:
-      - name: model.joblib
 
-- step:
-    name: evaluate
-    image: docker.io/yourdocker/titanic-ml
+  evaluate:
+    image: python:3.9
     command:
+      - pip install -r requirements.txt
       - python src/evaluate.py
-    inputs:
-      - name: processed-data
-        filename: processed.csv
-      - name: trained-model
-        filename: model.joblib
 
-- pipeline:
-    name: training-pipeline
-    nodes:
-      - name: preprocess
-        type: execution
-        step: preprocess
-
-      - name: train
-        type: execution
-        step: train
-        override:
-          inputs:
-            - name: processed-data
-              filename: processed.csv
-
-      - name: evaluate
-        type: execution
-        step: evaluate
-        override:
-          inputs:
-            - name: processed-data
-              filename: processed.csv
-            - name: trained-model
-              filename: model.joblib
-
-    edges:
-      - [preprocess.output.processed.csv, train.input.processed-data]
-      - [preprocess.output.processed.csv, evaluate.input.processed-data]
-      - [train.output.model.joblib, evaluate.input.trained-model]
+pipelines:
+  training-pipeline:
+    steps:
+      - preprocess
+      - train
+      - evaluate
