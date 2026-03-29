@@ -1,27 +1,27 @@
-version: 1
+- version: 1
 
-steps:
-  - name: preprocess
-    image: python:3.9
-    command:
-      - pip install -r requirements.txt
-      - python src/preprocess.py
+  steps:
+    - name: preprocess
+      image: python:3.9
+      command:
+        - pip install -r requirements.txt
+        - python src/preprocess.py
 
-  - name: train
-    image: python:3.9
-    command:
-      - pip install -r requirements.txt
-      - python src/train.py
+    - name: train
+      image: python:3.9
+      command:
+        - pip install -r requirements.txt
+        - python src/train.py
 
-  - name: evaluate
-    image: python:3.9
-    command:
-      - pip install -r requirements.txt
-      - python src/evaluate.py
+    - name: evaluate
+      image: python:3.9
+      command:
+        - pip install -r requirements.txt
+        - python src/evaluate.py
 
-pipelines:
-  - name: training-pipeline
-    steps:
-      - name: preprocess
-      - name: train
-      - name: evaluate
+  pipelines:
+    - name: training-pipeline
+      steps:
+        - name: preprocess
+        - name: train
+        - name: evaluate
